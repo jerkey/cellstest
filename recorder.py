@@ -32,6 +32,15 @@ class SwhRecorder:
         self.secPerPoint=1.0/self.RATE
         
         self.p = pyaudio.PyAudio()
+        # http://forum.cogsci.nl/index.php?p=/discussion/287/open-two-sound-cards/p1
+        count = self.p.get_device_count()
+        devices = []
+        for i in range(count):
+              devices.append(self.p.get_device_info_by_index(i))
+        print(devices)
+        for i, dev in enumerate(devices):
+              print "%d - %s" % (i, dev['name'])
+
         self.inStream = self.p.open(format=pyaudio.paInt16,channels=1,rate=self.RATE,input=True,frames_per_buffer=self.BUFFERSIZE)
         
         self.xsBuffer=numpy.arange(self.BUFFERSIZE)*self.secPerPoint
