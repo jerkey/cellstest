@@ -12,13 +12,14 @@ import struct
 class SwhRecorder:
     """Simple, cross-platform class to record from the microphone."""
     
-    def __init__(self):
+    def __init__(self,device):
         """minimal garb is executed when class is loaded."""
         self.RATE=48100
         self.BUFFERSIZE=2**12 #1024 is a good buffer size
         self.secToRecord=.1
         self.threadsDieNow=False
         self.newAudio=False
+        self.input_device_index=device
         
     def setup(self):
         """initialize sound card."""
@@ -40,8 +41,23 @@ class SwhRecorder:
         print(devices)
         for i, dev in enumerate(devices):
               print "%d - %s" % (i, dev['name'])
+        devinfo = self.p.get_device_info_by_index(self.input_device_index)
+        #print('for')
+        #for i in range(48100,100000):
+        #        printi,
+        #        if self.p.is_format_supported(i,  # Sample rate
+        #                 input_device=devinfo['index'],
+        #                 input_channels=devinfo['maxInputChannels'],
+        #                 input_format=pyaudio.paInt16):
+        #            print('samplerate:'+str(i))
+        #print('rof')
 
-        self.inStream = self.p.open(format=pyaudio.paInt16,channels=1,rate=self.RATE,input=True,frames_per_buffer=self.BUFFERSIZE)
+        self.inStream = self.p.open(format=pyaudio.paInt16,
+            input_device_index=self.input_device_index,
+            channels=1,
+            rate=self.RATE,
+            input=True,
+            frames_per_buffer=self.BUFFERSIZE)
         
         self.xsBuffer=numpy.arange(self.BUFFERSIZE)*self.secPerPoint
         self.xs=numpy.arange(self.chunksToRecord*self.BUFFERSIZE)*self.secPerPoint
