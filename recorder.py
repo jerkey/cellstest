@@ -7,6 +7,7 @@ import pyaudio
 import threading
 import pylab
 import struct
+import json
 
 
 class SwhRecorder:
@@ -38,7 +39,7 @@ class SwhRecorder:
         devices = []
         for i in range(count):
               devices.append(self.p.get_device_info_by_index(i))
-        print(devices)
+              print(json.dumps(self.p.get_device_info_by_index(i), sort_keys=True,indent=4, separators=(',', ': ')))
         for i, dev in enumerate(devices):
               print "%d - %s" % (i, dev['name'])
         devinfo = self.p.get_device_info_by_index(self.input_device_index)
