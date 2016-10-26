@@ -19,13 +19,20 @@ def getKey(): # return a keypress
 #    screenSize = screen.getmaxyx()
 #    midX = int(screenSize[1]/2) # store the midpoint of the width of the screen
 
-SR0 = SwhRecorder(devicename='pulse')
+bufferlength=8192
+
+SR0 = SwhRecorder(devicename='USB',length=bufferlength)
 SR0.setup()
 
 SR0.record(forever=False) # record one buffer's worth of audio
 
-#print(SR0.audio.flatten()[:10])
-pylab.plot(SR0.audio.flatten()) # create the plot of the data
+left =numpy.empty(bufferlength,dtype=numpy.uint16)
+right=numpy.empty(bufferlength,dtype=numpy.uint16)
+for i in range(bufferlength):
+    left[i] =SR0.audio[i*2  ]+32768
+    right[i]=SR0.audio[i*2+1]+32768
+pylab.plot(left ) # create the plot of the data
+pylab.plot(right) # create the plot of the data
 
 pylab.ion() # use interactive aka Non-blocking mode for .show()
 
@@ -33,7 +40,7 @@ with plt.xkcd():
     plt.show() # bring up the data window (non-blocking)
 
 #press = getKey() # wait for a keypress
-time.sleep(2)
+time.sleep(3)
 
 pylab.close() # close the data window
 

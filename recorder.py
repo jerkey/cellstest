@@ -13,12 +13,12 @@ import json
 class SwhRecorder:
     """Simple, cross-platform class to record from the microphone."""
 
-    def __init__(self,devicename):
+    def __init__(self,devicename,length):
         """minimal garb is executed when class is loaded."""
         self.RATE=44100
         self.channels=2
         self.devicename=devicename
-        self.BUFFERSIZE=2**13 #1024 is a good buffer size
+        self.BUFFERSIZE=length
         self.secToRecord=.1
         self.threadsDieNow=False
         self.newAudio=False
