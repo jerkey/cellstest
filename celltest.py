@@ -19,7 +19,7 @@ def getKey(): # return a keypress
 #    screenSize = screen.getmaxyx()
 #    midX = int(screenSize[1]/2) # store the midpoint of the width of the screen
 
-SR0 = SwhRecorder(device=11)
+SR0 = SwhRecorder(devicename='pulse')
 SR0.setup()
 
 SR0.record(forever=False) # record one buffer's worth of audio

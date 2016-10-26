@@ -13,15 +13,16 @@ import json
 class SwhRecorder:
     """Simple, cross-platform class to record from the microphone."""
 
-    def __init__(self,device):
+    def __init__(self,devicename):
         """minimal garb is executed when class is loaded."""
         self.RATE=44100
         self.channels=2
+        self.devicename=devicename
         self.BUFFERSIZE=2**13 #1024 is a good buffer size
         self.secToRecord=.1
         self.threadsDieNow=False
         self.newAudio=False
-        self.input_device_index=device
+        self.input_device_index=-1 # default to no device unless devicename matches
 
     def setup(self):
         """initialize sound card."""
@@ -43,6 +44,11 @@ class SwhRecorder:
               print(json.dumps(self.p.get_device_info_by_index(i), sort_keys=True,indent=4, separators=(',', ': ')))
         for i, dev in enumerate(devices):
               print "%d - %s" % (i, dev['name'])
+              if dev['name'].find(self.devicename) > -1:
+                  self.input_device_index = i
+        if self.input_device_index < 0:
+            print "audio device not found with name \"%s\"" % (self.devicename)
+            raise SystemExit
         devinfo = self.p.get_device_info_by_index(self.input_device_index)
         #print('for')
         #for i in range(48100,100000):
